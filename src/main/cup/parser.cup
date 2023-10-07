@@ -65,7 +65,6 @@ terminal FLOAT;
 terminal STRING;
 terminal INT;
 terminal COMMA;
-terminal ELEMENT_IN_THE_MIDDLE;
 
 // Non Terminals
 non terminal sentence;
@@ -95,8 +94,6 @@ block ::= sentence {: System.out.println("Block"); :};
 block ::= block sentence {: System.out.println("Blocks"); :};
 
 sentence ::= assignment {: System.out.println("End Sentence"); :};
-
-sentence ::= IDENTIFIER:id ASSIG ELEMENT_IN_THE_MIDDLE OPEN_BRACKET params CLOSE_BRACKET {: ElementInTheMiddle();System.out.println("ElementInTheMiddle"); :};
 
 params ::= element  {: System.out.println("Param"); :};
 params ::= params COMMA element {: System.out.println("Params"); :};
