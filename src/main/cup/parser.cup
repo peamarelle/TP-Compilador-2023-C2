@@ -12,18 +12,9 @@ action code{:
     public ArrayList<String> identifiersList = new ArrayList();
     ArrayList<Object> element = new ArrayList<Object>();
     int medio;
+
     public void agregar_a_lista(Object elem)  {
             element.add(elem);
-        }
-
-    public int ElementInTheMiddle()  {
-                int posicion_medio;
-                Object valor_medio;
-    
-    if(element.size() % 2 == 0)
-        throw new Error("ElementInTheMiddle: La cantidad de elementos debe ser impar\n");
-    element.clear();
-    return 0;
     }
 :}
 
@@ -65,6 +56,7 @@ terminal FLOAT;
 terminal STRING;
 terminal INT;
 terminal COMMA;
+terminal RESERVED_CONCAT;
 
 // Non Terminals
 non terminal sentence;
@@ -95,13 +87,13 @@ block ::= block sentence {: System.out.println("Blocks"); :};
 
 sentence ::= assignment {: System.out.println("End Sentence"); :};
 
+sentence ::= RESERVED_CONCAT OPEN_BRACKET params COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET {: System.out.println("ConcatenarConRecorte"); :};
+
 params ::= element  {: System.out.println("Param"); :};
 params ::= params COMMA element {: System.out.println("Params"); :};
 
 element ::= IDENTIFIER:id  {: agregar_a_lista(id);System.out.println(id); :};
-element ::= INTEGER_CONSTANT:constant {: agregar_a_lista(constant);System.out.println("Param"); :};
 element ::= STRING_CONSTANT:constant {: agregar_a_lista(constant);System.out.println("Param"); :};
-element ::= FLOAT_CONSTANT:constant {: agregar_a_lista(constant);System.out.println("Param"); :};
 
 sentence ::= iteration {: System.out.println("Sentence interation"); :};
 

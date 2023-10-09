@@ -56,3 +56,9 @@ d = "asldk  fh sjf"
 d = "@sdADaSjfla%dfg"
 a = 1
 e = 1.1
+
+cad1 = "Hello"
+cad2 = "world"
+
+ConcatenarConRecorte(cad1, cad2, 3)
+ConcatenarConRecorte("Hello", "world", 4)

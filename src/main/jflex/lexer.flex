@@ -47,6 +47,7 @@ Init="init"
 Float="Float"
 String="String"
 Int="Int"
+ReservedConcat = "ConcatenarConRecorte"
 
 OpenBracket = "("
 CloseBracket = ")"
@@ -99,6 +100,7 @@ FloatConstant = {Digit}*{Dot}{Digit}*
   {String}                                 { return symbol(ParserSym.STRING); }
   {Int}                                    { return symbol(ParserSym.INT); }
   {Init}                                   { return symbol(ParserSym.INIT); }
+  {ReservedConcat}                         { return symbol(ParserSym.RESERVED_CONCAT); }
 
   {Identifier}          {
                           String id = new String(yytext());
