@@ -4,6 +4,7 @@ import java_cup.runtime.Symbol;
 import lyc.compiler.ParserSym;
 import lyc.compiler.model.*;
 import static lyc.compiler.constants.Constants.*;
+import lyc.compiler.simbolsTable.SimbolTable;
 
 %%
 
@@ -30,6 +31,7 @@ import static lyc.compiler.constants.Constants.*;
   private Symbol symbol(int type, Object value) {
     return new Symbol(type, yyline, yycolumn, value);
   }
+  SimbolTable simbolTable = SimbolTable.getSingletonInstance();
 %}
 
 
@@ -60,6 +62,7 @@ LessThan = "<"
 LessEqualThan= "<="
 GreaterThan=">"
 GreaterEqualThan=">="
+Equal="=="
 And="&"
 Or="||"
 
@@ -96,9 +99,9 @@ FloatConstant = {Digit}*{Dot}{Digit}*
   {Write}                                  { return symbol(ParserSym.WRITE); }
   {Not}                                    { return symbol(ParserSym.NOT); }
   {DoublePoints}                           { return symbol(ParserSym.DOUBLE_POINTS); }
-  {Float}                                  { return symbol(ParserSym.FLOAT); }
-  {String}                                 { return symbol(ParserSym.STRING); }
-  {Int}                                    { return symbol(ParserSym.INT); }
+  {Float}                                  { return symbol(ParserSym.FLOAT, yytext()); }
+  {String}                                 { return symbol(ParserSym.STRING, yytext()); }
+  {Int}                                    { return symbol(ParserSym.INT, yytext()); }
   {Init}                                   { return symbol(ParserSym.INIT); }
   {ReservedConcat}                         { return symbol(ParserSym.RESERVED_CONCAT); }
 
@@ -107,6 +110,7 @@ FloatConstant = {Digit}*{Dot}{Digit}*
                           int length = id.length();
 
                           if(length <= IDENTIFIER_RANGE ){
+                            simbolTable.add(id, null, null, length);
                             return symbol(ParserSym.IDENTIFIER, yytext());
                           }
                           else {
@@ -159,6 +163,7 @@ FloatConstant = {Digit}*{Dot}{Digit}*
   {LessEqualThan}                           { return symbol(ParserSym.LESS_EQUAL_THAN); }
   {GreaterThan}                             { return symbol(ParserSym.GREATER_THAN); }
   {GreaterEqualThan}                        { return symbol(ParserSym.GREATER_EQUAL_THAN); }
+  {Equal}                                   { return symbol(ParserSym.EQUAL); }
   {And}                                     { return symbol(ParserSym.AND); }
   {Or}                                      { return symbol(ParserSym.OR); }
   {Comma}                                   { return symbol(ParserSym.COMMA); }

@@ -11,11 +11,15 @@ action code{:
     public SimbolTable simbolTable = SimbolTable.getSingletonInstance();
     public ArrayList<String> identifiersList = new ArrayList();
     ArrayList<Object> element = new ArrayList<Object>();
+    ArrayList<String> elementTipados = new ArrayList<String>();
     int medio;
+    String tipo;
 
     public void agregar_a_lista(Object elem)  {
             element.add(elem);
     }
+
+
 :}
 
 parser code{:
@@ -47,6 +51,7 @@ terminal LESS_THAN;
 terminal LESS_EQUAL_THAN;
 terminal GREATER_THAN;
 terminal GREATER_EQUAL_THAN;
+terminal EQUAL;
 terminal AND;
 terminal OR;
 terminal NOT;
@@ -76,6 +81,9 @@ non terminal variable;
 non terminal program;
 non terminal params;
 non terminal element;
+non terminal listaVariables;
+non terminal tipo;
+non terminal bloque_declaraciones;
 
 // Start Symbol Definition
 start with program;
@@ -119,11 +127,13 @@ condition ::= comparation AND comparation {: System.out.println("And"); :};
 condition ::= comparation OR comparation {: System.out.println("And"); :};
 
 comparation ::= expression comparator expression {: System.out.println("Comparation"); :};
+comparation ::= OPEN_BRACKET expression comparator expression CLOSE_BRACKET {: System.out.println("(Comparation)"); :};
 
 comparator ::= LESS_THAN {: System.out.println("<"); :};
 comparator ::= GREATER_THAN {: System.out.println(">"); :};
 comparator ::= LESS_EQUAL_THAN {: System.out.println("<="); :};
 comparator ::= GREATER_EQUAL_THAN {: System.out.println(">="); :};
+comparator ::= EQUAL {: System.out.println("=="); :};
 
 assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
 
@@ -134,7 +144,7 @@ term ::= term MULT factor {: System.out.println("*"); :};
 term ::= term DIV factor {: System.out.println("/"); :};
 term ::= factor {: System.out.println("Term = factor"); :};
 factor ::= IDENTIFIER:id  
-{: 
+{:
     System.out.println("Id: " + id);
 :};
 factor ::= INTEGER_CONSTANT:constant 
@@ -154,12 +164,18 @@ factor ::= FLOAT_CONSTANT:constant
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 
-initiation ::= INIT OPEN_CURLY_BRACKET declare CLOSE_CURLY_BRACKET;
+initiation ::= INIT OPEN_CURLY_BRACKET bloque_declaraciones CLOSE_CURLY_BRACKET;
 
-declare ::= variable;
-declare ::= declare variable;
+bloque_declaraciones ::= declare | bloque_declaraciones declare;
+declare ::= listaVariables DOUBLE_POINTS tipo {: simbolTable.print();simbolTable.setearTipoAIds(elementTipados,tipo); System.out.println("decla->lst : tipo");elementTipados.clear(); :};
+listaVariables ::= listaVariables COMMA IDENTIFIER:id {:  elementTipados.add(id.toString()); System.out.println("list->lista,id"); :};
+listaVariables ::= IDENTIFIER:id {: elementTipados.add(id.toString()); System.out.println("lista->id"); :};
 
-variable ::= IDENTIFIER:id DOUBLE_POINTS INT {: simbolTable.add(""+id, DataType.INT, null, null); :};
-variable ::= IDENTIFIER:id DOUBLE_POINTS STRING {: simbolTable.add(""+id, DataType.STRING, null, null); :};
-variable ::= IDENTIFIER:id DOUBLE_POINTS FLOAT {: simbolTable.add(""+id, DataType.FLOAT, null, null); :};
-variable ::= IDENTIFIER COMMA variable;
+tipo ::= INT:tip  {:  tipo=tip.toString(); :};
+tipo ::= STRING:tip  {:   tipo=tip.toString(); :};
+tipo ::= FLOAT:tip {:   tipo=tip.toString(); :};
+//variable ::= IDENTIFIER:id DOUBLE_POINTS INT {: simbolTable.add(""+id, DataType.INT, null, null); System.out.println("variable " + id.toString());:};
+//variable ::= IDENTIFIER:id DOUBLE_POINTS STRING {: simbolTable.add(""+id, DataType.STRING, null, null); System.out.println("variable " + id.toString());:};
+//variable ::= IDENTIFIER:id DOUBLE_POINTS FLOAT {: simbolTable.add(""+id, DataType.FLOAT, null, null); System.out.println("variable " + id.toString());:};
+//variable ::= IDENTIFIER COMMA variable  {:  System.out.println("variableLista");:};
+

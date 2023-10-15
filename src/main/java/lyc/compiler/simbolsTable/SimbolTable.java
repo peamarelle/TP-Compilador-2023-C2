@@ -27,7 +27,7 @@ public class SimbolTable {
     boolean simbolDuplicated = this.simbols.stream()
               .filter(o -> o.getNombre().equals(simbolRow.getNombre()))
               .findFirst().isPresent();
-    if(simbolDuplicated && simbolRow.getId() == "Id" ) {
+    if(simbolDuplicated && simbolRow.getTipo() == "Id" ) {
       System.out.println("\nError: simbolo duplicado: '" + simbolRow.getNombre() + "'\n");
       System.exit(0);
     }
@@ -40,7 +40,7 @@ public class SimbolTable {
 
   public void add(String nombre, DataType tipo, String valor, Integer longitud) {
     if (!isInTable(nombre)) {
-        this.simbols.add(new SimbolRow(nombre, tipo.toString(), valor, longitud));
+        this.simbols.add(new SimbolRow(nombre, (tipo !=null ) ?tipo.toString(): null , valor, longitud));
     }
   }
 
@@ -79,7 +79,7 @@ public Boolean isInTable(String nombre) {
         System.out.println(
         String.format("%-20s%-20s%-20s%-20s",
         row.getNombre(),
-        row.getId(),
+        row.getTipo(),
         row.getValor(),
         row.getLongitud() == null? "" : row.getLongitud()
         ));
@@ -92,11 +92,28 @@ public Boolean isInTable(String nombre) {
     for (SimbolRow row : simbols) {
       result += 
       String.format("%-20s%-20s%-20s%-20s\n",
-      row.getId(),
+      row.getTipo(),
       row.getNombre(),
       row.getValor(), row.getLongitud() == null? "" : row.getLongitud()
       );
     }
     return result;
   }
+
+
+    public void setearTipoAIds (ArrayList<String>ele,String tipo){
+
+        //SimbolRow = simbols.stream().anyMatch(symbol -> symbol.getNombre().equals(nombre));
+        Iterator<String> i = ele.iterator();
+        while (i.hasNext()) {
+            //System.out.println("iterador"+i.next());
+            SimbolRow t = new SimbolRow(i.next(),null,null,null);
+
+            int indice = simbols.indexOf(t);
+            simbols.get(indice).setTipo(tipo);
+            System.out.println(simbols.get(indice).toString());
+        }
+    }
 }
+
+
