@@ -92,26 +92,26 @@ public Boolean isInTable(String nombre) {
     for (SimbolRow row : simbols) {
       result += 
       String.format("%-20s%-20s%-20s%-20s\n",
-      row.getTipo(),
-      row.getNombre(),
-      row.getValor(), row.getLongitud() == null? "" : row.getLongitud()
+              row.getNombre(),
+              row.getTipo(),
+              row.getValor(),
+              row.getLongitud() == null? "" : row.getLongitud()
       );
     }
     return result;
   }
 
 
-    public void setearTipoAIds (ArrayList<String>ele,String tipo){
+    public void setearTipoAIds (ArrayList<String>ele,DataType tipo){
 
         //SimbolRow = simbols.stream().anyMatch(symbol -> symbol.getNombre().equals(nombre));
         Iterator<String> i = ele.iterator();
         while (i.hasNext()) {
-            //System.out.println("iterador"+i.next());
             SimbolRow t = new SimbolRow(i.next(),null,null,null);
 
             int indice = simbols.indexOf(t);
-            simbols.get(indice).setTipo(tipo);
-            System.out.println(simbols.get(indice).toString());
+            simbols.get(indice).setTipo(tipo.name());
+
         }
     }
 }

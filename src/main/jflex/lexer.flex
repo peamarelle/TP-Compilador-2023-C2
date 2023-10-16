@@ -50,6 +50,7 @@ Float="Float"
 String="String"
 Int="Int"
 ReservedConcat = "ConcatenarConRecorte"
+ReservedEstaContenido= "EstaContenido"
 
 OpenBracket = "("
 CloseBracket = ")"
@@ -104,6 +105,7 @@ FloatConstant = {Digit}*{Dot}{Digit}*
   {Int}                                    { return symbol(ParserSym.INT, yytext()); }
   {Init}                                   { return symbol(ParserSym.INIT); }
   {ReservedConcat}                         { return symbol(ParserSym.RESERVED_CONCAT); }
+  {ReservedEstaContenido}                  { return symbol(ParserSym.RESERVED_ESTACONTE); }
 
   {Identifier}          {
                           String id = new String(yytext());

@@ -13,7 +13,7 @@ action code{:
     ArrayList<Object> element = new ArrayList<Object>();
     ArrayList<String> elementTipados = new ArrayList<String>();
     int medio;
-    String tipo;
+    DataType tipo;
 
     public void agregar_a_lista(Object elem)  {
             element.add(elem);
@@ -62,6 +62,7 @@ terminal STRING;
 terminal INT;
 terminal COMMA;
 terminal RESERVED_CONCAT;
+terminal RESERVED_ESTACONTE;
 
 // Non Terminals
 non terminal sentence;
@@ -84,6 +85,7 @@ non terminal element;
 non terminal listaVariables;
 non terminal tipo;
 non terminal bloque_declaraciones;
+non terminal function;
 
 // Start Symbol Definition
 start with program;
@@ -93,41 +95,40 @@ program ::= initiation block;
 block ::= sentence {: System.out.println("Block"); :};
 block ::= block sentence {: System.out.println("Blocks"); :};
 
+//params ::= element  {: System.out.println("Param"); :};
+//params ::= params COMMA element {: System.out.println("Params"); :};
+
+
 sentence ::= assignment {: System.out.println("End Sentence"); :};
+sentence ::= iteration {: System.out.println("Sentence interation"); :};
+sentence ::= selection {: System.out.println("Sentence selecction"); :};
+sentence ::= function {: System.out.println("Sentence function"); :};
 
-sentence ::= RESERVED_CONCAT OPEN_BRACKET params COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET {: System.out.println("ConcatenarConRecorte"); :};
 
-params ::= element  {: System.out.println("Param"); :};
-params ::= params COMMA element {: System.out.println("Params"); :};
+assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
+iteration ::= WHILE OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("While"); :};
+selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("If"); :};
+selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET ELSE OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("If with Else"); :};
+function ::= RESERVED_CONCAT OPEN_BRACKET element COMMA element COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET {: System.out.println("ConcatenarConRecorte"); :};
+function ::= RESERVED_ESTACONTE OPEN_BRACKET element COMMA element CLOSE_BRACKET {: System.out.println("Esta Contenido"); :};
+function ::= READ OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Read"); :};
+function ::= WRITE OPEN_BRACKET STRING_CONSTANT CLOSE_BRACKET {: System.out.println("Write string constant"); :};
+function ::= WRITE OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Write"); :};
+
 
 element ::= IDENTIFIER:id  {: agregar_a_lista(id);System.out.println(id); :};
-element ::= STRING_CONSTANT:constant {: agregar_a_lista(constant);System.out.println("Param"); :};
+element ::= STRING_CONSTANT:constant {: agregar_a_lista(constant);System.out.println("element"); :};
 
-sentence ::= iteration {: System.out.println("Sentence interation"); :};
 
-sentence ::= selection {: System.out.println("Sentence selecction"); :};
-
-sentence ::= READ OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Read"); :};
-
-sentence ::= WRITE OPEN_BRACKET STRING_CONSTANT CLOSE_BRACKET {: System.out.println("Write string constant"); :};
-sentence ::= WRITE OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Write"); :};
-
-iteration ::= WHILE OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("While"); :};
-
-selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("If"); :};
-
-selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET ELSE OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("If with Else"); :};
 
 condition ::= comparation {: System.out.println("Condition"); :};
-
 condition ::= NOT comparation {: System.out.println("Condition with not"); :};
-
 condition ::= comparation AND comparation {: System.out.println("And"); :};
-
 condition ::= comparation OR comparation {: System.out.println("And"); :};
 
 comparation ::= expression comparator expression {: System.out.println("Comparation"); :};
 comparation ::= OPEN_BRACKET expression comparator expression CLOSE_BRACKET {: System.out.println("(Comparation)"); :};
+comparation ::= function;
 
 comparator ::= LESS_THAN {: System.out.println("<"); :};
 comparator ::= GREATER_THAN {: System.out.println(">"); :};
@@ -135,7 +136,6 @@ comparator ::= LESS_EQUAL_THAN {: System.out.println("<="); :};
 comparator ::= GREATER_EQUAL_THAN {: System.out.println(">="); :};
 comparator ::= EQUAL {: System.out.println("=="); :};
 
-assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
 
 expression ::= expression PLUS term {: System.out.println("+"); :};
 expression ::= expression SUB term {: System.out.println("-"); :};
@@ -150,30 +150,30 @@ factor ::= IDENTIFIER:id
 factor ::= INTEGER_CONSTANT:constant 
 {: 
     System.out.println("Constant integer: " + constant );
-    simbolTable.add("_"+constant, DataType.INT, constant.toString(), null); 
+    simbolTable.add("_"+constant, DataType.CTE_INT, constant.toString(), null);
 :};
 factor ::= STRING_CONSTANT:constant  
 {: 
     System.out.println("Constant string: " + constant );
-    simbolTable.add("_"+constant, DataType.STRING, constant.toString(), null);
+    simbolTable.add("_"+constant, DataType.CTE_STRING, constant.toString(), constant.toString().length());
 :};
 factor ::= FLOAT_CONSTANT:constant   
 {: 
     System.out.println("Constant float: " + constant ); 
-    simbolTable.add("_"+constant, DataType.FLOAT, constant.toString(), null);
+    simbolTable.add("_"+constant, DataType.CTE_FLOAT, constant.toString(), null);
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 
 initiation ::= INIT OPEN_CURLY_BRACKET bloque_declaraciones CLOSE_CURLY_BRACKET;
 
 bloque_declaraciones ::= declare | bloque_declaraciones declare;
-declare ::= listaVariables DOUBLE_POINTS tipo {: simbolTable.print();simbolTable.setearTipoAIds(elementTipados,tipo); System.out.println("decla->lst : tipo");elementTipados.clear(); :};
+declare ::= listaVariables DOUBLE_POINTS tipo {: simbolTable.setearTipoAIds(elementTipados,tipo); System.out.println("decla->lst : tipo");elementTipados.clear(); :};
 listaVariables ::= listaVariables COMMA IDENTIFIER:id {:  elementTipados.add(id.toString()); System.out.println("list->lista,id"); :};
 listaVariables ::= IDENTIFIER:id {: elementTipados.add(id.toString()); System.out.println("lista->id"); :};
 
-tipo ::= INT:tip  {:  tipo=tip.toString(); :};
-tipo ::= STRING:tip  {:   tipo=tip.toString(); :};
-tipo ::= FLOAT:tip {:   tipo=tip.toString(); :};
+tipo ::= INT:tip  {:  tipo=DataType.INT; :};
+tipo ::= STRING:tip  {:   tipo=DataType.STRING; :};
+tipo ::= FLOAT:tip {:   tipo=DataType.FLOAT; :};
 //variable ::= IDENTIFIER:id DOUBLE_POINTS INT {: simbolTable.add(""+id, DataType.INT, null, null); System.out.println("variable " + id.toString());:};
 //variable ::= IDENTIFIER:id DOUBLE_POINTS STRING {: simbolTable.add(""+id, DataType.STRING, null, null); System.out.println("variable " + id.toString());:};
 //variable ::= IDENTIFIER:id DOUBLE_POINTS FLOAT {: simbolTable.add(""+id, DataType.FLOAT, null, null); System.out.println("variable " + id.toString());:};

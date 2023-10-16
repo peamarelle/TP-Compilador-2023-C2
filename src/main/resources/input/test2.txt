@@ -62,3 +62,9 @@ cad2 = "world"
 
 ConcatenarConRecorte(cad1, cad2, 3)
 ConcatenarConRecorte("Hello", "world", 4)
+ConcatenarConRecorte("Hello", "world", 4)
+EstaContenido("Hello", "world")
+if (EstaContenido("Hello", "world"))
+{
+    write("a es mas grande que b o c es mas grande que b")
+}
