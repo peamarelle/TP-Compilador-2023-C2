@@ -5,9 +5,12 @@ import java.util.*;
 import lyc.compiler.simbolsTable.SimbolTable;
 import lyc.compiler.simbolsTable.SimbolRow;
 import lyc.compiler.simbolsTable.DataType;
+import lyc.compiler.tercetos.Tercetos;
+import lyc.compiler.tercetos.Terceto;
 
 class Parser;
 action code{:
+    Stack<Integer> stack = new Stack<Integer>();
     public SimbolTable simbolTable = SimbolTable.getSingletonInstance();
     public ArrayList<String> identifiersList = new ArrayList();
     ArrayList<Object> element = new ArrayList<Object>();
@@ -15,11 +18,36 @@ action code{:
     int medio;
     DataType tipo;
 
+    public Tercetos tercetos = Tercetos.getSingletonInstance();
+
+    //en duda si se usa
     public void agregar_a_lista(Object elem)  {
             element.add(elem);
     }
 
+    Integer indexFactor = -1;
+    Integer indexExpression = -1;
+    Integer indexTerm = -1;
+    Integer indexAssignment = -1;
+    //Integer indexComparator = -1;
+    //Integer indexRead = -1;
+    //Integer indexWrite = -1;
+    Integer cantComparaciones=1;
+    Integer value=-1;
+    Integer jumpWhile=-1;
+    Integer indexExpressionLeft = -1;
+    Integer indexExpressionRight = -1;
+    Integer indexComparation = -1;
+    Integer indexToUpdate=-1;
+    Integer indexIdentifier = -1;
+    Integer indexComparationLeft=-1;
+    Integer indexComparationRight=-1;
+    String comparatorSimbol;
+    String cpm ;
 
+
+    ///funciones especiales
+    String cade,cadena1, cadena2;
 :}
 
 parser code{:
@@ -90,7 +118,7 @@ non terminal function;
 // Start Symbol Definition
 start with program;
 
-program ::= initiation block;
+program ::= initiation block {: tercetos.print(); :};
 
 block ::= sentence {: System.out.println("Block"); :};
 block ::= block sentence {: System.out.println("Blocks"); :};
@@ -105,62 +133,162 @@ sentence ::= selection {: System.out.println("Sentence selecction"); :};
 sentence ::= function {: System.out.println("Sentence function"); :};
 
 
-assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
-iteration ::= WHILE OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("While"); :};
-selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("If"); :};
-selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET ELSE OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:System.out.println("If with Else"); :};
-function ::= RESERVED_CONCAT OPEN_BRACKET element COMMA element COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET {: System.out.println("ConcatenarConRecorte"); :};
+assignment ::= IDENTIFIER:id {:indexIdentifier = tercetos.create(id.toString(), "", "");:} ASSIG expression {: indexAssignment = tercetos.create("=", indexIdentifier, indexExpression);
+    System.out.println("Assignment"+indexAssignment); :};
+iteration ::= WHILE OPEN_BRACKET {:
+            jumpWhile = tercetos.size() + 1;
+
+
+    :}condition {:
+
+    :}CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
+                 {:
+                    if(cantComparaciones==2){
+                        Integer indexToUpdate = stack.pop();
+                        //System.out.println("-------------Saco del stack" + indexToUpdate);
+                        Integer value = tercetos.size() + 2;
+                        tercetos.update(indexToUpdate, value);
+                        cantComparaciones= 1;
+                    }
+                    Integer indexToUpdate = stack.pop();
+                    //System.out.println("-------------Saco del stack" + indexToUpdate);
+                    Integer value = tercetos.size() + 2;
+                    tercetos.update(indexToUpdate, value);
+                    Integer indexBi = tercetos.create("BI", jumpWhile, "");
+                 :};
+
+
+selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
+                {:
+                     if(cantComparaciones==2){
+                                             Integer indexToUpdate = stack.pop();
+                                             Integer value = tercetos.size() + 1;
+                                             tercetos.update(indexToUpdate, value);
+                                             cantComparaciones= 1;
+                                         }
+                                         Integer indexToUpdate = stack.pop();
+                                         //System.out.println("-------------Saco del stack" + indexToUpdate);
+                                         Integer value = tercetos.size() + 1;
+                                         tercetos.update(indexToUpdate, value);
+                     :};
+
+
+selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
+                {:indexToUpdate = stack.pop();
+                    value = tercetos.size() + 2;
+                    System.out.println("If");
+                    tercetos.update(indexToUpdate, value);
+                    stack.push(value);:}
+                    ELSE OPEN_CURLY_BRACKET
+                    {:
+                     System.out.println("Else");
+                        Integer indexToUpdate = stack.pop();
+                        value = tercetos.size() + 1;
+                        Integer indexBi = tercetos.create("BI", "", "");
+                        stack.push(indexBi);
+                    :}
+                    block CLOSE_CURLY_BRACKET {:
+
+
+
+if(cantComparaciones==2){
+                        Integer indexToUpdate = stack.pop();
+                        Integer value = tercetos.size() + 2;
+                        tercetos.update(indexToUpdate, value);
+                        cantComparaciones= 1;
+                    }
+                    Integer indexToUpdate = stack.pop();
+                    Integer value = tercetos.size() + 2;
+                    tercetos.update(indexToUpdate, value);
+
+                   :};
+
+
+function ::= RESERVED_CONCAT OPEN_BRACKET element {:cadena1=cade;:}COMMA element {:cadena2=cade;:} COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET {:
+        System.out.println("ConcatenarConRecorte "+ cadena1 + " "+ cadena2);
+        Integer lenghtCad1=cadena1.length();
+        Integer lenghtCad2=cadena2.length();
+        Integer r= Integer.parseInt(cte.toString());
+        Integer posTerCad1=tercetos.create("=", cadena1, cadena2);
+        tercetos.create("=", cadena1, cadena2);
+
+        System.out.println("ConcatenarConRecorte " + r); :};
 function ::= RESERVED_ESTACONTE OPEN_BRACKET element COMMA element CLOSE_BRACKET {: System.out.println("Esta Contenido"); :};
 function ::= READ OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Read"); :};
 function ::= WRITE OPEN_BRACKET STRING_CONSTANT CLOSE_BRACKET {: System.out.println("Write string constant"); :};
-function ::= WRITE OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Write"); :};
+function ::= WRITE OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Write"); tercetos.create("Write", indexExpression, "");:};
 
 
-element ::= IDENTIFIER:id  {: agregar_a_lista(id);System.out.println(id); :};
-element ::= STRING_CONSTANT:constant {: agregar_a_lista(constant);System.out.println("element"); :};
+element ::= IDENTIFIER:id  {: cade=id.toString();agregar_a_lista(id);System.out.println(id); :};
+element ::= STRING_CONSTANT:constant {: cade=constant.toString();agregar_a_lista(constant);System.out.println("element"); :};
 
 
 
 condition ::= comparation {: System.out.println("Condition"); :};
 condition ::= NOT comparation {: System.out.println("Condition with not"); :};
-condition ::= comparation AND comparation {: System.out.println("And"); :};
-condition ::= comparation OR comparation {: System.out.println("And"); :};
 
-comparation ::= expression comparator expression {: System.out.println("Comparation"); :};
+condition ::= comparation {:
+                            indexComparationLeft=indexComparation;
+                            cantComparaciones= 2;
+
+                           :}
+                            AND comparation {: indexComparationRight=indexComparation; :};
+
+condition ::= comparation {:
+                            indexComparationLeft=indexComparation;
+                            Integer indexToUpdate = stack.pop();
+                            Integer value = tercetos.size() + 1;
+                            tercetos.update(indexToUpdate, value);
+                          :}
+                            OR comparation {:
+
+                            System.out.println("OR");
+                            :};
+
+comparation ::= expression {:indexExpressionLeft = indexExpression; :} comparator {: cpm = tercetos.ConvertToAssembler(comparatorSimbol);:}
+                expression {:indexExpressionRight = indexExpression;
+                            indexComparation = tercetos.create("CMP", indexExpressionLeft, indexExpressionRight);
+                            indexToUpdate = tercetos.create(cpm, "", "");
+                            stack.push(indexToUpdate);
+                            System.out.println("Comparation"); :};
 comparation ::= OPEN_BRACKET expression comparator expression CLOSE_BRACKET {: System.out.println("(Comparation)"); :};
 comparation ::= function;
 
-comparator ::= LESS_THAN {: System.out.println("<"); :};
-comparator ::= GREATER_THAN {: System.out.println(">"); :};
-comparator ::= LESS_EQUAL_THAN {: System.out.println("<="); :};
-comparator ::= GREATER_EQUAL_THAN {: System.out.println(">="); :};
-comparator ::= EQUAL {: System.out.println("=="); :};
+comparator ::= LESS_THAN {: System.out.println("<"); comparatorSimbol = "<"; :};
+comparator ::= GREATER_THAN {: System.out.println(">"); comparatorSimbol = ">"; :};
+comparator ::= LESS_EQUAL_THAN {: System.out.println("<="); comparatorSimbol = "<="; :};
+comparator ::= GREATER_EQUAL_THAN {: System.out.println(">="); comparatorSimbol = ">="; :};
+comparator ::= EQUAL {: System.out.println("=="); comparatorSimbol = "==";:};
 
 
-expression ::= expression PLUS term {: System.out.println("+"); :};
-expression ::= expression SUB term {: System.out.println("-"); :};
-expression ::= term {: System.out.println("Expression = Term"); :};
-term ::= term MULT factor {: System.out.println("*"); :};
-term ::= term DIV factor {: System.out.println("/"); :};
-term ::= factor {: System.out.println("Term = factor"); :};
+expression ::= expression PLUS term {: System.out.println("+"); indexExpression = tercetos.create("+", indexFactor, indexExpression);:};
+expression ::= expression SUB term {: System.out.println("-"); indexExpression = tercetos.create("-", indexFactor, indexExpression);:};
+expression ::= term {: indexExpression = indexTerm; System.out.println("Expression = Term"); :};
+term ::= term MULT factor {: System.out.println("*"); indexExpression = tercetos.create("*", indexFactor, indexExpression);:};
+term ::= term DIV factor {: System.out.println("/"); indexExpression = tercetos.create("/", indexFactor, indexExpression);:};
+term ::= factor {: indexTerm = indexFactor; System.out.println("Term = factor"); :};
 factor ::= IDENTIFIER:id  
 {:
+    indexFactor = tercetos.create(id.toString(), "", "");
     System.out.println("Id: " + id);
 :};
 factor ::= INTEGER_CONSTANT:constant 
 {: 
     System.out.println("Constant integer: " + constant );
     simbolTable.add("_"+constant, DataType.CTE_INT, constant.toString(), null);
+    indexFactor = tercetos.create(constant.toString(), "", "");
 :};
 factor ::= STRING_CONSTANT:constant  
 {: 
     System.out.println("Constant string: " + constant );
     simbolTable.add("_"+constant, DataType.CTE_STRING, constant.toString(), constant.toString().length());
+    indexFactor = tercetos.create(constant.toString(), "", "");
 :};
 factor ::= FLOAT_CONSTANT:constant   
 {: 
     System.out.println("Constant float: " + constant ); 
     simbolTable.add("_"+constant, DataType.CTE_FLOAT, constant.toString(), null);
+    indexFactor = tercetos.create(constant.toString(), "", "");
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 

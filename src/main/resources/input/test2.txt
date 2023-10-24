@@ -68,3 +68,35 @@ if (EstaContenido("Hello", "world"))
 {
     write("a es mas grande que b o c es mas grande que b")
 }
+
+ a=0
+ciclo (c>d) {
+    t="pepee"
+    g=344
+}
+
+
+
+a = 1
+b = 1
+c = 2
+ciclo (c>d & f==9) {
+    t="pepee"
+    g=344
+    b = 1
+    c = 2
+}
+
+ConcatenarConRecorte("Hola", mundo, 3)
+if (a>b)
+{
+    write("a es mas grande que b o c es mas grande que b")
+    q = 99999.99
+    w = 99999.99
+}
+else
+{
+    e = 99999.99
+    r = 99999.99
+}
+     t = 99999.99
