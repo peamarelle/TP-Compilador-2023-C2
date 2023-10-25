@@ -5,18 +5,12 @@ init {
     p1, p2, p3 : String
 }
 
-if (a > b & c > b)
-{
-   a = 10
+if(a>b){
+  read(base)
+  write("a es mas grande que b y c es mas grande que b")
+  read("ppppppppppp")
+  write(archivo)
 }
-a = 10 + 1
+ConcatenarConRecorte("Hola", "Mundo", 2)
 
-if ( 1 <= 10 )
-{
-    a = 10 + 2
-}
-else
-{
-    a = 10 + 2
-}
-a = 10 + 1
+h=1
