@@ -48,6 +48,7 @@ action code{:
 
     ///funciones especiales
     String cade,cadena1, cadena2;
+    Integer posCade1,posCade2,posLongCade1,posLongCade2,posRecorte;
 :}
 
 parser code{:
@@ -123,10 +124,6 @@ program ::= initiation block {: tercetos.print(); :};
 block ::= sentence {: System.out.println("Block"); :};
 block ::= block sentence {: System.out.println("Blocks"); :};
 
-//params ::= element  {: System.out.println("Param"); :};
-//params ::= params COMMA element {: System.out.println("Params"); :};
-
-
 sentence ::= assignment {: System.out.println("End Sentence"); :};
 sentence ::= iteration {: System.out.println("Sentence interation"); :};
 sentence ::= selection {: System.out.println("Sentence selecction"); :};
@@ -136,87 +133,115 @@ sentence ::= function {: System.out.println("Sentence function"); :};
 assignment ::= IDENTIFIER:id {:indexIdentifier = tercetos.create(id.toString(), "", "");:} ASSIG expression {: indexAssignment = tercetos.create("=", indexIdentifier, indexExpression);
     System.out.println("Assignment"+indexAssignment); :};
 iteration ::= WHILE OPEN_BRACKET {:
-            jumpWhile = tercetos.size() + 1;
+                jumpWhile = tercetos.size() + 1;
+            :}condition {:
 
-
-    :}condition {:
-
-    :}CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
-                 {:
-                    if(cantComparaciones==2){
-                        Integer indexToUpdate = stack.pop();
-                        //System.out.println("-------------Saco del stack" + indexToUpdate);
-                        Integer value = tercetos.size() + 2;
-                        tercetos.update(indexToUpdate, value);
-                        cantComparaciones= 1;
-                    }
+            :}CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
+             {:
+                if(cantComparaciones==2){
                     Integer indexToUpdate = stack.pop();
-                    //System.out.println("-------------Saco del stack" + indexToUpdate);
                     Integer value = tercetos.size() + 2;
                     tercetos.update(indexToUpdate, value);
-                    Integer indexBi = tercetos.create("BI", jumpWhile, "");
-                 :};
+                    cantComparaciones= 1;
+                }
+                Integer indexToUpdate = stack.pop();
+                Integer value = tercetos.size() + 2;
+                tercetos.update(indexToUpdate, value);
+                Integer indexBi = tercetos.create("BI", jumpWhile, "");
+             :};
 
 
 selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
                 {:
                      if(cantComparaciones==2){
-                                             Integer indexToUpdate = stack.pop();
-                                             Integer value = tercetos.size() + 1;
-                                             tercetos.update(indexToUpdate, value);
-                                             cantComparaciones= 1;
-                                         }
-                                         Integer indexToUpdate = stack.pop();
-                                         //System.out.println("-------------Saco del stack" + indexToUpdate);
-                                         Integer value = tercetos.size() + 1;
-                                         tercetos.update(indexToUpdate, value);
-                     :};
+                         Integer indexToUpdate = stack.pop();
+                         Integer value = tercetos.size() + 1;
+                         tercetos.update(indexToUpdate, value);
+                         cantComparaciones= 1;
+                     }
+                     Integer indexToUpdate = stack.pop();
+                     Integer value = tercetos.size() + 1;
+                     tercetos.update(indexToUpdate, value);
+                :};
 
 
 selection ::= IF OPEN_BRACKET condition CLOSE_BRACKET OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
-                {:indexToUpdate = stack.pop();
+                {:
+                    indexToUpdate = stack.pop();
                     value = tercetos.size() + 2;
                     System.out.println("If");
                     tercetos.update(indexToUpdate, value);
-                    stack.push(value);:}
-                    ELSE OPEN_CURLY_BRACKET
+                    stack.push(value);
+                :}
+               ELSE OPEN_CURLY_BRACKET
                     {:
-                     System.out.println("Else");
+                        System.out.println("Else");
                         Integer indexToUpdate = stack.pop();
                         value = tercetos.size() + 1;
                         Integer indexBi = tercetos.create("BI", "", "");
                         stack.push(indexBi);
                     :}
-                    block CLOSE_CURLY_BRACKET {:
-
-
-
-if(cantComparaciones==2){
+               block CLOSE_CURLY_BRACKET
+                 {:
+                    if(cantComparaciones==2){
                         Integer indexToUpdate = stack.pop();
                         Integer value = tercetos.size() + 2;
                         tercetos.update(indexToUpdate, value);
                         cantComparaciones= 1;
                     }
                     Integer indexToUpdate = stack.pop();
-                    Integer value = tercetos.size() + 2;
+                    Integer value = tercetos.size() + 1;
                     tercetos.update(indexToUpdate, value);
+                 :};
 
-                   :};
 
+function ::= RESERVED_CONCAT OPEN_BRACKET element
+                  {:
+                    cadena1=cade; posCade1=tercetos.create(cadena1, "", "");
+                    Integer lenghtCad1=cadena1.length();
+                    posLongCade1=tercetos.create(String.valueOf(lenghtCad1), "", "");
+                  :}
+             COMMA element
+                  {:
+                    cadena2=cade; posCade2=tercetos.create(cadena2, "", "");
+                    Integer lenghtCad1=cadena2.length();
+                    posLongCade2=tercetos.create(String.valueOf(lenghtCad1), "", "");
+                  :}
+             COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET
+                 {:
+                    posRecorte= tercetos.create(cte.toString(), "","");
+                    tercetos.create("CMP", posRecorte, posLongCade1);
+                    indexToUpdate=tercetos.create("BLE", "", "");
+                    stack.push(indexToUpdate);
+                    tercetos.create("CMP", posRecorte, posLongCade2);
+                    indexToUpdate=tercetos.create("BLE","", "");
+                    stack.push(indexToUpdate);
+                    posCade1=tercetos.create(cadena1.substring(   Integer.valueOf(cte.toString()))  , "", "");
+                    posCade2=tercetos.create(cadena2.substring( Integer.valueOf(cte.toString())), "", "");
+                    Integer res=tercetos.create("+",posCade1, posCade2);
+                    tercetos.create("=","res", res);
+                    tercetos.create("error","", "");
 
-function ::= RESERVED_CONCAT OPEN_BRACKET element {:cadena1=cade;:}COMMA element {:cadena2=cade;:} COMMA INTEGER_CONSTANT:cte CLOSE_BRACKET {:
-        System.out.println("ConcatenarConRecorte "+ cadena1 + " "+ cadena2);
-        Integer lenghtCad1=cadena1.length();
-        Integer lenghtCad2=cadena2.length();
-        Integer r= Integer.parseInt(cte.toString());
-        Integer posTerCad1=tercetos.create("=", cadena1, cadena2);
-        tercetos.create("=", cadena1, cadena2);
+                    indexToUpdate = stack.pop();
+                    value = tercetos.size() ;
+                    tercetos.update(indexToUpdate, value);
+                    indexToUpdate = stack.pop();
+                    tercetos.update(indexToUpdate, value);
+                    System.out.println("ConcatenarConRecorte " );
+                 :};
 
-        System.out.println("ConcatenarConRecorte " + r); :};
 function ::= RESERVED_ESTACONTE OPEN_BRACKET element COMMA element CLOSE_BRACKET {: System.out.println("Esta Contenido"); :};
-function ::= READ OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Read"); :};
-function ::= WRITE OPEN_BRACKET STRING_CONSTANT CLOSE_BRACKET {: System.out.println("Write string constant"); :};
-function ::= WRITE OPEN_BRACKET IDENTIFIER CLOSE_BRACKET {: System.out.println("Write"); tercetos.create("Write", indexExpression, "");:};
+function ::= READ OPEN_BRACKET element {:indexIdentifier=tercetos.create(cade, "", ""); :} CLOSE_BRACKET
+                 {:
+                   tercetos.create("Read", indexIdentifier, "");
+                   System.out.println("Read");
+                 :};
+
+function ::= WRITE OPEN_BRACKET element {:indexIdentifier=tercetos.create(cade, "", ""); :} CLOSE_BRACKET
+                 {:
+                    tercetos.create("Write", indexIdentifier, "");
+                    System.out.println("Write string constant");
+                 :};
 
 
 element ::= IDENTIFIER:id  {: cade=id.toString();agregar_a_lista(id);System.out.println(id); :};
