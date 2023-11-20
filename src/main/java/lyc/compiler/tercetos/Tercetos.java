@@ -61,20 +61,12 @@ public class Tercetos {
       return tercetos.size();
     }
 
-    
+    public ArrayList<Terceto> getTercetos() {
+      return tercetos;
+    }
 
     public Integer size() {
       return tercetos.size();
-    }
-
-    public String getValue(Integer index){
-      return tercetos.get(index -1).getElement1();
-    }
-    public String getValue2(Integer index){
-        return tercetos.get(index -1).getElement2();
-    }
-    public String getValue3(Integer index){
-        return tercetos.get(index -1).getElement3();
     }
 
    public String ConvertToAssembler(String i)
