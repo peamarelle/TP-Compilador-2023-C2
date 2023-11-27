@@ -101,6 +101,17 @@ public Boolean isInTable(String nombre) {
     return result;
   }
 
+    public SimbolRow buscaRow(String nombre) {
+        SimbolRow resultado = null;
+        for (SimbolRow row : simbols) {
+            if (row.getNombre().equals(nombre)) {
+                resultado = row;
+                break;
+            }
+        }
+        return resultado;
+    }
+
 
     public void setearTipoAIds (ArrayList<String>ele,DataType tipo){
 
@@ -113,6 +124,26 @@ public Boolean isInTable(String nombre) {
             simbols.get(indice).setTipo(tipo.name());
 
         }
+    }
+
+    public boolean sonCompatible(String nombre,DataType tipo){
+        SimbolRow aBuscar=buscaRow(nombre);
+        if(aBuscar == null)
+            throw new Error("No existe en la tabla de simbolos");
+        String tipoBuscado= aBuscar.getTipo();
+        System.out.println("--- ----" + tipoBuscado + "---------------");
+        if(tipoBuscado.equals("") )
+            throw new Error(nombre + " no ha sido declarada en el bloque 'init'");
+        if( tipoBuscado.contains(tipo.toString()) || tipo.toString().contains(tipoBuscado) )
+            return true;
+        else {
+            throw new Error(" Error de tipo");
+        }
+    }
+
+    public DataType sonCompatible(DataType tipo,DataType tipo2){
+        System.out.println(tipo);
+        return tipo;
     }
 }
 

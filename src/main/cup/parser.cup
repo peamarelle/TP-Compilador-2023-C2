@@ -16,7 +16,7 @@ action code{:
     ArrayList<Object> element = new ArrayList<Object>();
     ArrayList<String> elementTipados = new ArrayList<String>();
     int medio;
-    DataType tipo;
+    DataType tipo,ttipo,etipo;
 
     public Tercetos tercetos = Tercetos.getSingletonInstance();
 
@@ -131,7 +131,10 @@ sentence ::= function {: System.out.println("Sentence function"); :};
 
 
 assignment ::= IDENTIFIER:id {:indexIdentifier = tercetos.create(id.toString(), "", "");:} ASSIG expression {: indexAssignment = tercetos.create("=", indexIdentifier, indexExpression);
-    System.out.println("Assignment"+indexAssignment); :};
+    System.out.println("Assignment"+indexAssignment);
+    System.out.println(simbolTable.buscaRow(id.toString()));
+    simbolTable.sonCompatible(id.toString(),etipo);
+    :};
 iteration ::= WHILE OPEN_BRACKET {:
                 jumpWhile = tercetos.size() + 1;
             :}condition {:
@@ -286,12 +289,18 @@ comparator ::= GREATER_EQUAL_THAN {: System.out.println(">="); comparatorSimbol 
 comparator ::= EQUAL {: System.out.println("=="); comparatorSimbol = "==";:};
 
 
-expression ::= expression PLUS term {: System.out.println("+"); indexExpression = tercetos.create("+", indexFactor, indexExpression);:};
-expression ::= expression SUB term {: System.out.println("-"); indexExpression = tercetos.create("-", indexFactor, indexExpression);:};
-expression ::= term {: indexExpression = indexTerm; System.out.println("Expression = Term"); :};
+expression ::= expression PLUS term {:
+                System.out.println("+"); indexExpression = tercetos.create("+", indexFactor, indexExpression);
+                etipo=simbolTable.sonCompatible(etipo,ttipo);
+             :};
+expression ::= expression SUB term {:
+                System.out.println("-"); indexExpression = tercetos.create("-", indexFactor, indexExpression);
+                etipo=simbolTable.sonCompatible(etipo,ttipo);
+            :};
+expression ::= term {: indexExpression = indexTerm; System.out.println("Expression = Term"); etipo=ttipo;:};
 term ::= term MULT factor {: System.out.println("*"); indexExpression = tercetos.create("*", indexFactor, indexExpression);:};
 term ::= term DIV factor {: System.out.println("/"); indexExpression = tercetos.create("/", indexFactor, indexExpression);:};
-term ::= factor {: indexTerm = indexFactor; System.out.println("Term = factor"); :};
+term ::= factor {: indexTerm = indexFactor; System.out.println("Term = factor"); ttipo=tipo;:};
 factor ::= IDENTIFIER:id  
 {:
     indexFactor = tercetos.create(id.toString(), "", "");
@@ -302,18 +311,21 @@ factor ::= INTEGER_CONSTANT:constant
     System.out.println("Constant integer: " + constant );
     simbolTable.add("_"+constant, DataType.CTE_INT, constant.toString(), null);
     indexFactor = tercetos.create(constant.toString(), "", "");
+    tipo=DataType.CTE_INT;
 :};
 factor ::= STRING_CONSTANT:constant  
 {: 
     System.out.println("Constant string: " + constant );
     simbolTable.add("_"+constant, DataType.CTE_STRING, constant.toString(), constant.toString().length());
     indexFactor = tercetos.create(constant.toString(), "", "");
+    tipo=DataType.CTE_STRING;
 :};
 factor ::= FLOAT_CONSTANT:constant   
 {: 
     System.out.println("Constant float: " + constant ); 
     simbolTable.add("_"+constant, DataType.CTE_FLOAT, constant.toString(), null);
     indexFactor = tercetos.create(constant.toString(), "", "");
+    tipo=DataType.CTE_FLOAT;
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 
