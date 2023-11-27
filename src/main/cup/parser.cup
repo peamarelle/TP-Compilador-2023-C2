@@ -7,6 +7,7 @@ import lyc.compiler.simbolsTable.SimbolRow;
 import lyc.compiler.simbolsTable.DataType;
 import lyc.compiler.tercetos.Tercetos;
 import lyc.compiler.tercetos.Terceto;
+import lyc.compiler.assembler.Assembler;
 
 class Parser;
 action code{:
@@ -19,6 +20,7 @@ action code{:
     DataType tipo,ttipo,etipo;
 
     public Tercetos tercetos = Tercetos.getSingletonInstance();
+    public Assembler assembler = Assembler.getSingletonInstance();
 
     //en duda si se usa
     public void agregar_a_lista(Object elem)  {
@@ -119,7 +121,7 @@ non terminal function;
 // Start Symbol Definition
 start with program;
 
-program ::= initiation block {: tercetos.print(); :};
+program ::= initiation block {: tercetos.print(); assembler.generar(tercetos.tercetos);:};
 
 block ::= sentence {: System.out.println("Block"); :};
 block ::= block sentence {: System.out.println("Blocks"); :};

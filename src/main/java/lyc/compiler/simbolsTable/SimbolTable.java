@@ -145,6 +145,34 @@ public Boolean isInTable(String nombre) {
         System.out.println(tipo);
         return tipo;
     }
+
+
+    //--------------------------------------------
+    public String FindByValue(String a){
+        for (SimbolRow row : simbols) {
+            if(row.getValor().equals(a))
+            {
+                return row.getNombre();
+            }
+        }
+        return a;
+    }
+    public Integer size_tabla(){
+        return simbols.size();
+    }
+
+    public String Nombre(int a){
+        return simbols.get(a).getNombre();
+    }
+    public String Tipo(int a){
+        return simbols.get(a).getTipo();
+    }
+    public String Valor(int a){
+        return simbols.get(a).getValor();
+    }
+
+
+
 }
 
 

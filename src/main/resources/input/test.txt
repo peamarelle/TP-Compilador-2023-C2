@@ -5,7 +5,7 @@ init {
     p1, p2, p3 : String
 }
 
-a="HOla"
+p1="HOla"
 if(a>b){
   read(base)
   write("a es mas grande que b y c es mas grande que b")
