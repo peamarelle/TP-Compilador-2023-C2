@@ -17,7 +17,7 @@ action code{:
     ArrayList<Object> element = new ArrayList<Object>();
     ArrayList<String> elementTipados = new ArrayList<String>();
     int medio;
-    DataType tipo,ttipo,etipo;
+    DataType tipo,ttipo,etipo,ftipo,etipoi,etipod;
 
     public Tercetos tercetos = Tercetos.getSingletonInstance();
     public Assembler assembler = Assembler.getSingletonInstance();
@@ -132,7 +132,11 @@ sentence ::= selection {: System.out.println("Sentence selecction"); :};
 sentence ::= function {: System.out.println("Sentence function"); :};
 
 
-assignment ::= IDENTIFIER:id {:indexIdentifier = tercetos.create(id.toString(), "", "");:} ASSIG expression {: indexAssignment = tercetos.create("=", indexIdentifier, indexExpression);
+assignment ::= IDENTIFIER:id {:
+                            indexIdentifier = tercetos.create(id.toString(), "", "");
+                            simbolTable.estaEnSimbolTable(id.toString());
+                        :}
+              ASSIG expression {: indexAssignment = tercetos.create("=", indexIdentifier, indexExpression);
     System.out.println("Assignment"+indexAssignment);
     System.out.println(simbolTable.buscaRow(id.toString()));
     simbolTable.sonCompatible(id.toString(),etipo);
@@ -235,7 +239,28 @@ function ::= RESERVED_CONCAT OPEN_BRACKET element
                     System.out.println("ConcatenarConRecorte " );
                  :};
 
-function ::= RESERVED_ESTACONTE OPEN_BRACKET element COMMA element CLOSE_BRACKET {: System.out.println("Esta Contenido"); :};
+function ::= RESERVED_ESTACONTE OPEN_BRACKET element {: cadena1 = cade; :}
+                COMMA element  {: cadena2 = cade; :}CLOSE_BRACKET
+                {:
+                        posCade1=tercetos.create(cadena1, "", "");
+                        posCade2=tercetos.create(cadena2, "", "");
+                        tercetos.create("Esta contenido", posCade1, posCade2);
+                        tercetos.create("CMP", posCade1, posCade2);
+                        indexToUpdate= tercetos.create("BNE", "", "");
+                        stack.push(indexToUpdate);
+                        tercetos.create("TRUE", "" , "");
+                        indexToUpdate=tercetos.create("BI", "" , "");
+                        stack.push(indexToUpdate);
+                        tercetos.create("FALSE", "" , "");
+                        indexToUpdate = stack.pop();
+                        value = tercetos.size() ;
+                        tercetos.update(indexToUpdate, value+1);
+                        indexToUpdate = stack.pop();
+                        value = tercetos.size() ;
+                        tercetos.update(indexToUpdate, value);
+
+                        System.out.println("Esta Contenido");
+                  :};
 function ::= READ OPEN_BRACKET element {:indexIdentifier=tercetos.create(cade, "", ""); :} CLOSE_BRACKET
                  {:
                    tercetos.create("Read", indexIdentifier, "");
@@ -275,12 +300,22 @@ condition ::= comparation {:
                             System.out.println("OR");
                             :};
 
-comparation ::= expression {:indexExpressionLeft = indexExpression; :} comparator {: cpm = tercetos.ConvertToAssembler(comparatorSimbol);:}
-                expression {:indexExpressionRight = indexExpression;
+comparation ::= expression {:
+                            etipoi=etipo;
+                            indexExpressionLeft = indexExpression;
+                            :}
+                comparator {:
+                            cpm = tercetos.ConvertToAssembler(comparatorSimbol);
+                            :}
+                expression {:
+                            etipod=etipo;
+                            indexExpressionRight = indexExpression;
                             indexComparation = tercetos.create("CMP", indexExpressionLeft, indexExpressionRight);
                             indexToUpdate = tercetos.create(cpm, "", "");
                             stack.push(indexToUpdate);
-                            System.out.println("Comparation"); :};
+                            System.out.println("Comparation");
+                            etipo=simbolTable.sonCompatible(etipoi,etipod);
+                            :};
 comparation ::= OPEN_BRACKET expression comparator expression CLOSE_BRACKET {: System.out.println("(Comparation)"); :};
 comparation ::= function;
 
@@ -300,11 +335,18 @@ expression ::= expression SUB term {:
                 etipo=simbolTable.sonCompatible(etipo,ttipo);
             :};
 expression ::= term {: indexExpression = indexTerm; System.out.println("Expression = Term"); etipo=ttipo;:};
-term ::= term MULT factor {: System.out.println("*"); indexExpression = tercetos.create("*", indexFactor, indexExpression);:};
-term ::= term DIV factor {: System.out.println("/"); indexExpression = tercetos.create("/", indexFactor, indexExpression);:};
-term ::= factor {: indexTerm = indexFactor; System.out.println("Term = factor"); ttipo=tipo;:};
+term ::= term MULT factor {: System.out.println("*");
+                    indexExpression = tercetos.create("*", indexFactor, indexExpression);
+                     ttipo=simbolTable.sonCompatible(ttipo,ftipo);
+                    :};
+term ::= term DIV factor {: System.out.println("/");
+                    indexExpression = tercetos.create("/", indexFactor, indexExpression);
+                     ttipo=simbolTable.sonCompatible(ttipo,ftipo);
+            :};
+term ::= factor {: indexTerm = indexFactor; System.out.println("Term = factor"); ttipo=ftipo;:};
 factor ::= IDENTIFIER:id  
 {:
+    simbolTable.estaEnSimbolTable(id.toString());
     indexFactor = tercetos.create(id.toString(), "", "");
     System.out.println("Id: " + id);
 :};
@@ -313,21 +355,21 @@ factor ::= INTEGER_CONSTANT:constant
     System.out.println("Constant integer: " + constant );
     simbolTable.add("_"+constant, DataType.CTE_INT, constant.toString(), null);
     indexFactor = tercetos.create(constant.toString(), "", "");
-    tipo=DataType.CTE_INT;
+    ftipo=DataType.CTE_INT;
 :};
 factor ::= STRING_CONSTANT:constant  
 {: 
     System.out.println("Constant string: " + constant );
     simbolTable.add("_"+constant, DataType.CTE_STRING, constant.toString(), constant.toString().length());
     indexFactor = tercetos.create(constant.toString(), "", "");
-    tipo=DataType.CTE_STRING;
+    ftipo=DataType.CTE_STRING;
 :};
 factor ::= FLOAT_CONSTANT:constant   
 {: 
     System.out.println("Constant float: " + constant ); 
     simbolTable.add("_"+constant, DataType.CTE_FLOAT, constant.toString(), null);
     indexFactor = tercetos.create(constant.toString(), "", "");
-    tipo=DataType.CTE_FLOAT;
+    ftipo=DataType.CTE_FLOAT;
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 
