@@ -1,0 +1,20 @@
+NOMBRE              TIPODATO            VALOR               LONGITUD            
+g                   INT                                     1                   
+a                   INT                                     1                   
+variable1           INT                                     9                   
+cad1                STRING                                  4                   
+variable2           STRING                                  9                   
+t                   FLOAT                                   1                   
+r                   FLOAT                                   1                   
+e                   FLOAT                                   1                   
+q                   FLOAT                                   1                   
+w                   FLOAT                                   1                   
+b1                  FLOAT                                   2                   
+p1                  STRING                                  2                   
+p2                  STRING                                  2                   
+p3                  STRING                                  2                   
+_"pepee"            CTE_STRING          "pepee"             7                   
+_344                CTE_INT             344                                     
+mundo                                                       5                   
+b                                                           1                   
+_99999.99           CTE_FLOAT           99999.99                                

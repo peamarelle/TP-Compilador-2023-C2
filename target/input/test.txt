@@ -1,0 +1,33 @@
+init {
+    g,a,variable1 : Int
+    cad1,variable2 : String
+     t,r,e,q,w,b1 : Float
+    p1, p2, p3 : String
+}
+
+
+
+ciclo (a>g) {
+    cad1="pepee"
+    g=344
+}
+
+
+
+
+
+
+ConcatenarConRecorte("Hola", mundo, 3)
+if (a>b)
+{
+    write("a es mas grande que b o c es mas grande que b")
+    q = 99999.99
+    w = 99999.99
+}
+else
+{
+    e = 99999.99
+    r = 99999.99
+}
+     t = 99999.99
+

@@ -69,7 +69,7 @@ if (EstaContenido("Hello", "world"))
     write("a es mas grande que b o c es mas grande que b")
 }
 
- a=0
+a=0
 ciclo (c>d) {
     t="pepee"
     g=344

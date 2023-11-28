@@ -1,0 +1,102 @@
+init {
+    variable1 : Int
+    variable2 : String
+    a1, b1 : Float
+    p1, p2, p3 : String
+}
+
+a = 10 + 1
+ciclo ( 1 == 10 || 1 == 10 )
+{
+    a = 10 + 1
+}
+
+if ( 1 >= 10 )
+{
+    a = 10 + 2
+}
+
+if ( 1 <= 10 )
+{
+    a = 10 + 2
+}
+else
+{
+    a = 10 + 2
+}
+*-holamundo-*
+
+base = 1
+read(base)
+write(base)
+
+a = 1
+b = 1
+c = 2
+
+if (a > b & c > b)
+{
+    write("a es mas grande que b y c es mas grande que b")
+}
+
+if (a > b || c > b)
+{
+    write("a es mas grande que b o c es mas grande que b")
+}
+
+if (not a > b)
+{
+    write("a no es mas grande que b")
+}
+
+a = 99999.99
+a = 99.
+a = .9999
+d = "asldk  fh sjf"
+d = "@sdADaSjfla%dfg"
+a = 1
+e = 1.1
+
+cad1 = "Hello"
+cad2 = "world"
+
+ConcatenarConRecorte(cad1, cad2, 3)
+ConcatenarConRecorte("Hello", "world", 4)
+ConcatenarConRecorte("Hello", "world", 4)
+EstaContenido("Hello", "world")
+if (EstaContenido("Hello", "world"))
+{
+    write("a es mas grande que b o c es mas grande que b")
+}
+
+ a=0
+ciclo (c>d) {
+    t="pepee"
+    g=344
+}
+
+
+
+a = 1
+b = 1
+c = 2
+ciclo (c>d & f==9) {
+    t="pepee"
+    g=344
+    b = 1
+    c = 2
+}
+
+ConcatenarConRecorte("Hola", mundo, 3)
+if (a>b)
+{
+    write("a es mas grande que b o c es mas grande que b")
+    q = 99999.99
+    w = 99999.99
+}
+else
+{
+    e = 99999.99
+    r = 99999.99
+}
+     t = 99999.99
