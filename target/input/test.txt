@@ -1,10 +1,76 @@
 init {
-    g,a,variable1 : Int
-    cad1,variable2 : String
-     t,r,e,q,w,b1 : Float
-    p1, p2, p3 : String
+    variable1,a : Int
+    variable2 : String
+    f1, f2 : Float
+    s1, s2, s3,base : String
 }
- a=55+y6
+
+a = a + 1
+ciclo ( 1 == 10 || 1 == 10 )
+{
+    a = 10 + 1
+}
+
+if ( 1 >= 10 )
+{
+    a = 10 + 2
+}
+
+if ( 1 <= 10 )
+{
+    a = 10 + 2
+}
+else
+{
+    variable1 = 10 + 2
+}
+*-holamundo-*
+
+base = "base"
+read(base)
+write(base)
 
 
-a=55
+variable2 = "1"
+
+
+if (f1 > f2 & s1 > s2)
+{
+    write("a es mas grande que b y c es mas grande que b")
+}
+
+if (variable1 > 2 || 8 > variable1)
+{
+    write("a es mas grande que b o c es mas grande que b")
+}
+
+if (not f1 > f2)
+{
+    write("a no es mas grande que b")
+}
+
+
+f2 = 99.
+s1 = "asldk  fh sjf"
+s3 = "@sdADaSjfla%dfg"
+
+
+
+
+ConcatenarConRecorte(cad1, cad2, 3)
+ConcatenarConRecorte("Hello", "world", 4)
+ConcatenarConRecorte("Hello", "world", 4)
+EstaContenido("Hello", "world")
+
+
+a=0
+ciclo (s1>s2) {
+    s3="pepee"
+}
+
+ConcatenarConRecorte("Hola", mundo, 3)
+
+
+
+
+

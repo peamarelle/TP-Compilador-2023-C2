@@ -2,6 +2,7 @@ package lyc.compiler.simbolsTable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import lyc.compiler.simbolsTable.DataType;
 
 public class SimbolTable {
   ArrayList<SimbolRow> simbols;
@@ -113,14 +114,41 @@ public Boolean isInTable(String nombre) {
     }
 
     public void estaEnSimbolTable(String nombre) {
-        System.out.println("-----------------------------------------------------------");
+
         for (SimbolRow row : simbols) {
             if (row.getNombre().equals(nombre)) {
-                return;
+                if(row.getTipo().equals("")) {
+                    throw new Error(nombre + " Variable no declarada");
+                }else{
+                    return;
+                }
             }
         }
-        throw new Error("Variable no declarada");
+        throw new Error(nombre+ " Variable no declarada");
     }
+
+
+    public DataType estaEnSimbolTableTipe(String nombre) {
+
+        for (SimbolRow row : simbols) {
+            if (row.getNombre().equals(nombre)) {
+                if(row.getTipo().equals("")) {
+                    throw new Error(nombre + " Variable no declarada");
+                }else{
+                    if(row.getTipo().equals("INT"))
+                        return DataType.INT;
+                    if(row.getTipo().equals("STRING"))
+                        return DataType.STRING;
+                    if(row.getTipo().equals("FLOAT"))
+                        return DataType.FLOAT;
+                }
+            }
+        }
+        throw new Error(nombre+ " Variable no declarada");
+    }
+
+
+
 
     public void setearTipoAIds (ArrayList<String>ele,DataType tipo){
 
@@ -140,7 +168,7 @@ public Boolean isInTable(String nombre) {
         if(aBuscar == null)
             throw new Error("No existe en la tabla de simbolos");
         String tipoBuscado= aBuscar.getTipo();
-        //System.out.println("--- ----" + tipoBuscado + "---------------");
+
         if(tipoBuscado.equals("") )
             throw new Error(nombre + " no ha sido declarada en el bloque 'init'");
         if( tipoBuscado.contains(tipo.toString()) || tipo.toString().contains(tipoBuscado) )

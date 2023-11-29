@@ -1,17 +1,24 @@
 NOMBRE              TIPODATO            VALOR               LONGITUD            
-g                   INT                                     1                   
-a                   INT                                     1                   
 variable1           INT                                     9                   
-cad1                STRING                                  4                   
+a                   INT                                     1                   
 variable2           STRING                                  9                   
-t                   FLOAT                                   1                   
-r                   FLOAT                                   1                   
-e                   FLOAT                                   1                   
-q                   FLOAT                                   1                   
-w                   FLOAT                                   1                   
-b1                  FLOAT                                   2                   
-p1                  STRING                                  2                   
-p2                  STRING                                  2                   
-p3                  STRING                                  2                   
-_55                 CTE_INT             55                                      
-y6                                                          2                   
+f1                  FLOAT                                   2                   
+f2                  FLOAT                                   2                   
+s1                  STRING                                  2                   
+s2                  STRING                                  2                   
+s3                  STRING                                  2                   
+base                STRING                                  4                   
+_1                  CTE_INT             1                                       
+_10                 CTE_INT             10                                      
+_2                  CTE_INT             2                                       
+_"base"             CTE_STRING          "base"              6                   
+_"1"                CTE_STRING          "1"                 3                   
+_8                  CTE_INT             8                                       
+_99.                CTE_FLOAT           99.                                     
+_"asldk  fh sjf"    CTE_STRING          "asldk  fh sjf"     15                  
+_"@sdADaSjfla%dfg"  CTE_STRING          "@sdADaSjfla%dfg"   17                  
+cad1                                                        4                   
+cad2                                                        4                   
+_0                  CTE_INT             0                                       
+_"pepee"            CTE_STRING          "pepee"             7                   
+mundo                                                       5                   

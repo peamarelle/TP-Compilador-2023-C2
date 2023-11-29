@@ -349,6 +349,7 @@ factor ::= IDENTIFIER:id
     simbolTable.estaEnSimbolTable(id.toString());
     indexFactor = tercetos.create(id.toString(), "", "");
     System.out.println("Id: " + id);
+    ftipo=simbolTable.estaEnSimbolTableTipe(id.toString());
 :};
 factor ::= INTEGER_CONSTANT:constant 
 {: 

@@ -1041,6 +1041,7 @@ indexIdentifier=tercetos.create(cade, "", "");
     simbolTable.estaEnSimbolTable(id.toString());
     indexFactor = tercetos.create(id.toString(), "", "");
     System.out.println("Id: " + id);
+    ftipo=simbolTable.estaEnSimbolTableTipe(id.toString());
 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("factor",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
